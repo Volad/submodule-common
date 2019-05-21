@@ -1,0 +1,6 @@
+[submodule "submodule-b"]
+	path = submodule-b
+	url = https://github.com/Volad/submodule-b.git
+[submodule "submodule-a"]
+	path = submodule-a
+	url = https://github.com/Volad/submodule-a.git
