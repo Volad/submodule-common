@@ -1,0 +1,65 @@
+plugins {
+    id 'org.asciidoctor.convert' version '1.5.3'
+    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'java'
+}
+
+
+subprojects {
+    ext {
+        set('snippetsDir', file("build/generated-snippets"))
+    }
+
+    test {
+        outputs.dir snippetsDir
+    }
+
+    configureJavaProject(it)
+
+
+
+}
+
+def configureJavaProject(Project project) {
+    print("COnfigure project $project")
+    configure(project) {
+        apply plugin: 'java'
+        apply plugin: 'io.spring.dependency-management'
+
+        sourceCompatibility = 1.8
+
+        configureDependencyManagement(project)
+        configureAnnotationProcessors(project)
+    }
+}
+
+def configureDependencyManagement(Project project) {
+    configure(project) {
+        repositories {
+            mavenCentral()
+        }
+
+        dependencies {
+            implementation 'org.springframework.boot:spring-boot-starter-web:+'
+            compileOnly 'org.projectlombok:lombok:+'
+            annotationProcessor 'org.projectlombok:lombok:+'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test:+'
+            testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:+'
+
+            testCompileOnly('org.projectlombok:lombok:+')
+            testAnnotationProcessor('org.projectlombok:lombok:+')
+
+        }
+
+
+    }
+}
+
+static def configureAnnotationProcessors(Project project) {
+    project.configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+
+    }
+}
